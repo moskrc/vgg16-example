@@ -2,8 +2,13 @@
 {% load prediction_tags %}
 
 {% block body %}
+<div class="description">
+    <a target="_blank" href="https://neurohive.io/en/popular-networks/vgg16/">VGG16</a> | <a target="_blank" href="http://www.image-net.org/">ImageNet</a>
+</div>
+
 
 <h1>VGG16</h1>
+
 
 <div class="upload-btn-wrapper">
     <form action="{% url 'predict' %}" id="upload-form" method="post" enctype="multipart/form-data">{% csrf_token %}

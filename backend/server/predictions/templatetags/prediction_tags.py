@@ -10,6 +10,8 @@ def image_as_base64(image):
     if not image:
         return
 
+    image.seek(0)
+
     try:
         image_format = image.content_type.split('/')[1].lower()
         image_b64 = base64.b64encode(image.read())
