@@ -1,3 +1,52 @@
-img.uploaded-image {
-    max-height: 50vh;
+body {
+    font-family: "Helvetica Neue", sans-serif;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    text-align: center;
+}
+
+.upload-btn-wrapper {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+}
+
+.btn {
+    border: 2px solid gray;
+    color: gray;
+    background-color: white;
+    padding: 8px 20px;
+    border-radius: 8px;
+    font-size: 3em;
+    font-weight: bold;
+}
+
+.upload-btn-wrapper input[type=file] {
+    font-size: 100px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+}
+
+
+.predictions ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.predictions ul li {
+    font-size: 1em;
+}
+
+.predictions ul li.green {
+    color: darkgreen;
+    font-weight: bold;
+    font-size: 2em;
+}
+
+.uploaded-image img {
+    max-height: 20vh;
 }

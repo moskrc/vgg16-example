@@ -3,32 +3,37 @@
 
 {% block body %}
 
-<h1>Upload Image</h1>
-<form action="{% url 'predict' %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+<h1>VGG16</h1>
 
-    <p>{{ form.non_field_errors }}</p>
-    <p>{{ form.image.label_tag }} {{ form.image.help_text }}</p>
-    <p>
-        {{ form.image.errors }}
-        {{ form.image }}
-    </p>
-    <p><input type="submit" value="Upload"/></p>
-</form>
+<div class="upload-btn-wrapper">
+    <form action="{% url 'predict' %}" id="upload-form" method="post" enctype="multipart/form-data">{% csrf_token %}
+        <button class="btn">Upload a file</button>
+        <p>{{ form.non_field_errors }}</p>
+        <p>
+            {{ form.image.errors }}
+            {{ form.image }}
+        </p>
+    </form>
+</div>
 
 
 {% if uploaded_image %}
-<h3>Uploaded Image:</h3>
-<img class="uploaded-image" src="{{uploaded_image|image_as_base64}}">
+<div class="uploaded-image">
+    <h3>Uploaded Image:</h3>
+    <img class="uploaded-image" src="{{uploaded_image|image_as_base64}}">
+</div>
 {% endif %}
 
 {% if predictions %}
-<h4>What is this?</h4>
+<div class="predictions">
+    <h4>Predictions</h4>
 
-<ul>
-{% for p in predictions %}
-    <li>{{p.0}} <span>{{p.1}}%</span></li>
-{% endfor %}
-</ul>
+    <ul>
+        {% for p in predictions %}
+        <li class="{% if p.1 > 20 %}green{% else %}gray{%endif%}">{{p.0}}: <span>{{p.1}}%</span></li>
+        {% endfor %}
+    </ul>
+</div>
 {% endif %}
 
 
