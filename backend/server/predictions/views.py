@@ -15,7 +15,6 @@ def predict(request):
         form = UploadImageForm(request.POST, request.FILES)
         if form.is_valid():
             uploaded_image = request.FILES.get('image')
-            print(type(uploaded_image))
 
             # process image
             predictions, preview_image = PredictionsConfig.prediction.predict(uploaded_image)
