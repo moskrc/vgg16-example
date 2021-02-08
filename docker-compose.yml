@@ -1,0 +1,26 @@
+version: '2'
+
+services:
+  nginx:
+    restart: always
+    image: nginx:latest
+    ports:
+      - 8000:8000
+    volumes:
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - static_volume:/app/backend/server/static
+      - ./backend:/app/backend
+
+  wsgiserver:
+    restart: always
+    build:
+      context: .
+      dockerfile: ./docker/backend/Dockerfile
+    entrypoint: /app/docker/backend/wsgi-entrypoint.sh
+    volumes:
+      - static_volume:/app/backend/server/static
+      - ./backend:/app/backend
+    expose:
+      - 8000
+volumes:
+  static_volume: { }
