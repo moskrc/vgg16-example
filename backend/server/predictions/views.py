@@ -15,13 +15,11 @@ def predict(request):
         form = UploadImageForm(request.POST, request.FILES)
         if form.is_valid():
             uploaded_image = request.FILES.get('image')
+            print(type(uploaded_image))
 
             # process image
-            predictions = PredictionsConfig.prediction.predict(uploaded_image)
+            predictions, preview_image = PredictionsConfig.prediction.predict(uploaded_image)
 
-            # resize image for preview
-            preview_image = Image.open(uploaded_image)
-            preview_image.thumbnail((320, 240), Image.ANTIALIAS)
             file_buffer = BytesIO()
             preview_image.save(file_buffer, 'jpeg')
             preview_image = InMemoryUploadedFile(file_buffer, None, 'foo.jpg', 'image/jpeg', None, None)

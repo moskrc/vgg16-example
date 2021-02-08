@@ -1,4 +1,8 @@
+from typing import List
+
+import numpy as np
 from PIL import Image
+from django.core.files.uploadedfile import TemporaryUploadedFile
 from keras.applications.vgg16 import VGG16
 from keras.applications.vgg16 import decode_predictions
 from keras.applications.vgg16 import preprocess_input
@@ -9,24 +13,24 @@ class Predictor:
     def __init__(self):
         self.model = VGG16()
 
-    def labels_to_percents(self, labels):
+    def labels_to_percents(self, labels) -> List:
         """
         Attach percents to labels
         """
         return [[x[1], round(x[2] * 100, 2)] for x in labels[0]]
 
-    def predict(self, uploaded_image):
+    def predict(self, uploaded_image: TemporaryUploadedFile) -> (List, Image):
         """
         Read image and predict category
         """
-        image = Image.open(uploaded_image).copy()
-        uploaded_image.seek(0)
-
         # convert the image pixels to a numpy array
-        image = img_to_array(image)
+        image = img_to_array(Image.open(uploaded_image))
 
         # resize for vgg16
         image = smart_resize(image, (224, 224))
+
+        # grab a RGB preview
+        rgb_preview = Image.fromarray(np.uint8(image)).convert('RGB')
 
         # reshape data for the model
         image = image.reshape((1, image.shape[0], image.shape[1], image.shape[2]))
@@ -43,4 +47,4 @@ class Predictor:
         # make it readable
         labels = self.labels_to_percents(labels)
 
-        return labels
+        return labels, rgb_preview
