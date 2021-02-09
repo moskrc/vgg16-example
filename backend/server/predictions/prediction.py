@@ -3,15 +3,13 @@ from typing import List
 import numpy as np
 from PIL import Image
 from django.core.files.uploadedfile import TemporaryUploadedFile
-from keras.applications.vgg16 import VGG16
-from keras.applications.vgg16 import decode_predictions
-from keras.applications.vgg16 import preprocess_input
 from keras.preprocessing.image import img_to_array, smart_resize
+from keras.applications.nasnet import NASNetLarge, decode_predictions, preprocess_input
 
 
 class Predictor:
     def __init__(self):
-        self.model = VGG16()
+        self.model = NASNetLarge()
 
     def labels_to_percents(self, labels) -> List:
         """
@@ -26,16 +24,16 @@ class Predictor:
         # convert the image pixels to a numpy array
         image = img_to_array(Image.open(uploaded_image))
 
-        # resize for vgg16
-        image = smart_resize(image, (224, 224))
+        # resize (crop) to vgg16 size (331, 331, 3)
+        image = smart_resize(image, (331, 331))
 
-        # grab a RGB preview
+        # grab a RGB preview for frontend
         rgb_preview = Image.fromarray(np.uint8(image)).convert('RGB')
 
-        # reshape data for the model
-        image = image.reshape((1, image.shape[0], image.shape[1], image.shape[2]))
+        # reshape data for the model, add new axis (1, 224, 224, 3)
+        image = np.expand_dims(image, axis=0)
 
-        # prepare the image for the VGG model
+        # prepare the image for the VGG model (subtracts the mean RGB channels)
         image = preprocess_input(image)
 
         # predict the probability across all output classes
